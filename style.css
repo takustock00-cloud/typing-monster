@@ -1,0 +1,392 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes explode {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.8); opacity: 0.5; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes comboFloat {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-60px) scale(1.5); opacity: 0; }
+}
+
+@keyframes starBurst {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1) rotate(180deg); opacity: 0; }
+}
+
+@keyframes titleBounce {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.05) rotate(2deg); }
+}
+
+body {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ========== START SCREEN ========== */
+#startScreen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+#startScreen h1 {
+  font-size: 3.5rem;
+  color: #fff;
+  text-shadow: 4px 4px 0 #e94560, 6px 6px 0 rgba(0,0,0,0.2);
+  animation: titleBounce 2s ease-in-out infinite;
+  margin-bottom: 10px;
+}
+
+#startScreen .subtitle {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 40px;
+}
+
+#startScreen .mascots {
+  font-size: 3rem;
+  margin-bottom: 30px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.level-select {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.level-btn {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  border: 3px solid rgba(255,255,255,0.5);
+  border-radius: 20px;
+  padding: 20px 25px;
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  min-width: 150px;
+}
+
+.level-btn:hover {
+  background: rgba(255,255,255,0.35);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.level-btn.selected {
+  background: rgba(255,255,255,0.4);
+  border-color: #fff;
+  box-shadow: 0 0 20px rgba(255,255,255,0.4);
+}
+
+.level-btn .level-emoji { font-size: 2rem; display: block; margin-bottom: 8px; }
+.level-btn .level-name { font-weight: bold; font-size: 1.2rem; display: block; }
+.level-btn .level-desc { font-size: 0.85rem; opacity: 0.8; display: block; margin-top: 5px; }
+
+.start-btn {
+  background: linear-gradient(135deg, #f6d365, #fda085);
+  border: none;
+  border-radius: 50px;
+  padding: 18px 60px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(253,160,133,0.5);
+  transition: all 0.3s;
+}
+
+.start-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(253,160,133,0.6);
+}
+
+/* ========== GAME SCREEN ========== */
+#gameScreen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%);
+  display: none;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+  font-size: 1.1rem;
+  z-index: 10;
+  position: relative;
+}
+
+.hearts { font-size: 1.5rem; letter-spacing: 5px; }
+.score-display { font-weight: bold; }
+.combo-display {
+  color: #ffd700;
+  font-weight: bold;
+  min-width: 100px;
+  text-align: right;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  z-index: 10;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700, #fda085);
+  transition: width 0.3s;
+  border-radius: 0 3px 3px 0;
+}
+
+#gameArea {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  overflow: hidden;
+}
+
+.ground {
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #e94560, #ffd700, #e94560, transparent);
+  box-shadow: 0 0 20px rgba(233,69,96,0.5);
+  z-index: 5;
+}
+
+/* Monster */
+.monster {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: left 0.3s;
+  animation: popIn 0.3s ease-out;
+}
+
+.monster-emoji {
+  font-size: 2.8rem;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  animation: float 2s ease-in-out infinite;
+}
+
+.monster-word {
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  padding: 6px 14px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+  margin-top: 4px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.monster-word .typed { color: #e94560; }
+.monster-word .untyped { color: #333; }
+
+.monster.active .monster-word {
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 15px rgba(255,215,0,0.4);
+}
+
+.monster.exploding {
+  animation: explode 0.4s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Input area */
+.input-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+#typingDisplay {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 15px;
+  padding: 12px 25px;
+  font-size: 1.5rem;
+  color: #fff;
+  text-align: center;
+  width: 80%;
+  max-width: 500px;
+  letter-spacing: 3px;
+  min-height: 52px;
+}
+
+/* Floating messages */
+.float-msg {
+  position: absolute;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+  pointer-events: none;
+  animation: comboFloat 1s ease-out forwards;
+  z-index: 20;
+}
+
+/* Star particles */
+.star-particle {
+  position: absolute;
+  pointer-events: none;
+  animation: starBurst 0.6s ease-out forwards;
+  z-index: 15;
+}
+
+/* ========== RESULT SCREEN ========== */
+#resultScreen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0c0032, #190061, #240090, #3500d3);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  z-index: 100;
+}
+
+.result-title {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  animation: titleBounce 2s ease-in-out infinite;
+}
+
+.result-rank {
+  font-size: 5rem;
+  margin: 15px 0;
+  animation: popIn 0.5s ease-out;
+}
+
+.result-stats {
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 25px 40px;
+  margin: 20px 0;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.result-stats div {
+  margin: 10px 0;
+  font-size: 1.2rem;
+}
+
+.result-stats .stat-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.result-btns {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.result-btn {
+  background: rgba(255,255,255,0.2);
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 30px;
+  padding: 14px 35px;
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.result-btn:hover {
+  background: rgba(255,255,255,0.35);
+  transform: translateY(-3px);
+}
+
+.result-btn.primary {
+  background: linear-gradient(135deg, #f6d365, #fda085);
+  border: none;
+}
+
+/* Pause overlay */
+#pauseOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  flex-direction: column;
+  color: #fff;
+}
+
+#pauseOverlay h2 { font-size: 2.5rem; margin-bottom: 20px; }
+#pauseOverlay button {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 30px;
+  padding: 14px 40px;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin: 8px;
+  transition: all 0.3s;
+}
+#pauseOverlay button:hover { transform: scale(1.05); }

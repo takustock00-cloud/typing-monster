@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>タイピングモンスター</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen">
+  <div class="mascots">👾 🐙 🦑 🐸 🐱</div>
+  <h1>タイピングモンスター</h1>
+  <p class="subtitle">キーボードでモンスターをたおそう！</p>
+
+  <div class="level-select">
+    <button class="level-btn selected" data-level="1" onclick="selectLevel(1)">
+      <span class="level-emoji">🌟</span>
+      <span class="level-name">レベル 1</span>
+      <span class="level-desc">ひらがな 1もじ</span>
+    </button>
+    <button class="level-btn" data-level="2" onclick="selectLevel(2)">
+      <span class="level-emoji">⭐</span>
+      <span class="level-name">レベル 2</span>
+      <span class="level-desc">かんたんな たんご</span>
+    </button>
+    <button class="level-btn" data-level="3" onclick="selectLevel(3)">
+      <span class="level-emoji">💫</span>
+      <span class="level-name">レベル 3</span>
+      <span class="level-desc">えいごの ことば</span>
+    </button>
+  </div>
+
+  <button class="start-btn" onclick="startGame()">スタート！</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen">
+  <div class="game-header">
+    <div class="hearts" id="hearts">❤️❤️❤️</div>
+    <div class="score-display">スコア: <span id="scoreDisplay">0</span></div>
+    <div class="combo-display" id="comboDisplay"></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div id="gameArea"></div>
+  <div class="ground"></div>
+  <div class="input-area">
+    <div id="typingDisplay"><span style="color:rgba(255,255,255,0.3)">キーボードでタイプしよう！</span></div>
+  </div>
+
+  <div id="pauseOverlay">
+    <h2>ポーズ</h2>
+    <button onclick="resumeGame()">つづける</button>
+    <button onclick="quitToTitle()">タイトルにもどる</button>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="resultScreen">
+  <div class="result-title">けっか はっぴょう！</div>
+  <div class="result-rank" id="resultRank"></div>
+  <div class="result-stats">
+    <div>スコア<br><span class="stat-value" id="resultScore"></span></div>
+    <div>さいだいコンボ<br><span class="stat-value" id="resultCombo"></span></div>
+    <div>せいかくりつ<br><span class="stat-value" id="resultAccuracy"></span></div>
+    <div id="resultTitle" style="font-size:1.4rem; margin-top:15px; color:#fda085;"></div>
+  </div>
+  <div class="result-btns">
+    <button class="result-btn" onclick="quitToTitle()">タイトルへ</button>
+    <button class="result-btn primary" onclick="retryGame()">もういちど！</button>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
